@@ -13,16 +13,18 @@ struct TreeLinkNode {
     TreeLinkNode *left, *right, *next;
     TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
 };
+
 class Solution {
 public:
     void connect(TreeLinkNode *root) {
         if (!root) return;
         TreeLinkNode* parent = root;
+        TreeLinkNode* pSon = NULL, *pNode = parent;
         while (parent || parent->next) {
-            TreeLinkNode* pSon = NULL, *pNode = parent;
+            pSon = NULL, pNode = parent;
             while (pNode) {
                 if (pNode->left && pNode->right) pNode->left->next = pNode->right;
-                if (pNode->next) pNode = pNode->next;
+                pNode = pNode->next;
             }
             pNode = parent;
             while (!pSon) {
@@ -36,14 +38,15 @@ public:
                 TreeLinkNode* nextparent = pNode->next;
                 while (!nextparent->left && !nextparent->right) {
                     nextparent = nextparent->next;
-                    if (!nextparent) return;
+                    if (!nextparent) break;
                 }
-                TreeLinkNode* next = nextparent->left ? nextparent->left : nextparent->right;
-                first->next = next;
-                pNode = nextparent;
+                if (nextparent) {
+                    TreeLinkNode* next = nextparent->left ? nextparent->left : nextparent->right;
+                    first->next = next;
+                    pNode = nextparent;
+                } else break;
             }
             parent = pSon;
         }
     }
 };
-
